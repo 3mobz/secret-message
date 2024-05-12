@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secret Message with Matrix Rain</title>
+    <style>
+        * {margin: 0; padding: 0;}
+        body {background: black;}
+        canvas {display: block;}
+        #secretMessage {display: none; color: red; font-size: 24px; text-shadow: 2px 2px white; -webkit-text-stroke-width: 1px; -webkit-text-stroke-color: white;}
+    </style>
+</head>
+<body>
+    <div id="messageContainer">
+        <button id="message1" class="message" onclick="revealMessage(this)">1. CLICK ME to Reveal secret message</button>
+        <button id="message2" class="message" style="display: none;" onclick="revealMessage(this)">2. Pakka??</button>
+        <button id="message3" class="message" style="display: none;" onclick="revealMessage(this)">3. Are you sure?</button>
+        <button id="message4" class="message" style="display: none;" onclick="revealMessage(this)">4. Okay, click then?</button>
+        <button id="message5" class="message" style="display: none;" onclick="revealMessage(this)">5. Really!! Do you want to see the secret message?</button>
+        <p id="secretMessage" style="display: none;">SORRY, OUR SYSTEM DETECTED THAT YOU ARE NOT CAPABLE FOR VIEWING THE SECRET MESSAGE BECAUSE YOU ARE GAY 🏳️‍🌈</p>
+    </div>
+    <canvas id="c"></canvas>
+    <script>
+        var c = document.getElementById("c");
+        var ctx = c.getContext("2d");
+
+        // Making the canvas full screen
+        c.height = window.innerHeight;
+        c.width = window.innerWidth;
+
+        // English characters for Matrix rain
+        var english = "1001MOBZ01011101010101MOBZ10010101000mobz0111011110MOBZ01010110101010101mobz101110000101🦅";
+        // Converting the string into an array of single characters
+        english = english.split("");
+
+        var font_size = 15;
+        var columns = c.width / font_size; // Number of columns for the rain
+        // An array of drops - one per column
+        var drops = [];
+        // X below is the x coordinate
+        // 1 = y co-ordinate of the drop (same for every drop initially)
+        for (var x = 0; x < columns; x++)
+            drops[x] = 1;
+
+        // Drawing the characters for Matrix rain
+        function draw() {
+            // Black BG for the canvas with translucent BG to show trail
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+            ctx.fillRect(0, 0, c.width, c.height);
+
+            ctx.fillStyle = "#0F0"; // Green text
+            ctx.font = font_size + "px arial";
+            // Looping over drops
+            for (var i = 0; i < drops.length; i++) {
+                // A random character to print
+                var text = english[Math.floor(Math.random() * english.length)];
+                // X = i * font_size, Y = value of drops[i] * font_size
+                ctx.fillText(text, i * font_size, drops[i] * font_size);
+
+                // Sending the drop back to the top randomly after it has crossed the screen
+                // Adding a randomness to the reset to make the drops scattered on the Y axis
+                if (drops[i] * font_size > c.height && Math.random() > 0.975)
+                    drops[i] = 0;
+
+                // Incrementing Y coordinate
+                drops[i]++;
+            }
+        }
+
+        setInterval(draw, 33);
+
+        let clicks = 0;
+        function revealMessage(element) {
+            clicks++;
+            element.style.display = 'none';
+            if (clicks === 5) {
+                document.getElementById('secretMessage').style.display = 'block';
+            } else {
+                document.getElementById('message' + (clicks + 1)).style.display = 'inline-block';
+            }
+        }
+    </script>
+</body>
+</html>
